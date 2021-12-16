@@ -1,0 +1,22 @@
+{
+  "name": "hublemon",
+  "version": "1.0.0",
+  "description": "HubLemon, the comments hub of NiceLemon",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yasamnoya/hublemon.git"
+  },
+  "author": "JN Yiunn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yasamnoya/hublemon/issues"
+  },
+  "homepage": "https://github.com/yasamnoya/hublemon#readme",
+  "dependencies": {
+    "redis": "^4.0.1"
+  }
+}
