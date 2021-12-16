@@ -18,7 +18,8 @@
   "homepage": "https://github.com/yasamnoya/hublemon#readme",
   "dependencies": {
     "axios": "^0.24.0",
-    "redis": "^4.0.1"
+    "redis": "^4.0.1",
+    "string-similarity": "^4.0.4"
   },
   "devDependencies": {
     "eslint": "^8.4.1",
