@@ -5,5 +5,6 @@ router.get('/', (req, res) => {
 });
 
 router.use('/wiwivideo', require('./wiwi-video.route'));
+router.use('/odysee', require('./odysee.route'));
 
 module.exports = router;
