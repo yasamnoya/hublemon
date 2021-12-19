@@ -39,6 +39,20 @@ const getVideoDetails = async (title) => {
   return videoDetails;
 };
 
+const expandCommentsChannels = async (items) => Promise.all(items.map(async (item) => {
+  // filter out the properties
+  const {
+    channel_id, channel_name, channel_url: channelUrl, ...comment
+  } = item;
+
+  const channelDetails = await resolveChannel(channelUrl);
+
+  return {
+    ...comment,
+    channel: channelDetails,
+  };
+}));
+
 const getCommentReplies = async (commentId, page = 1, pageSize = 10) => {
   const res = await axios.post('https://comments.odysee.com/api/v2?m=comment.List', {
     jsonrpc: '2.0',
@@ -52,6 +66,8 @@ const getCommentReplies = async (commentId, page = 1, pageSize = 10) => {
       sort_by: 1,
     },
   });
+
+  res.data.result.items = await expandCommentsChannels(res.data.result.items);
   return res.data;
 };
 
@@ -73,6 +89,16 @@ const getCommentReplies = async (commentId, page = 1, pageSize = 10) => {
 //   return commentsCopy;
 // };
 
+const resolveChannel = async (channelUrl) => {
+  const res = await axios.post('https://api.na-backend.odysee.com/api/v1/proxy?m=resolve', {
+    jsonrpc: '2.0',
+    method: 'resolve',
+    params: { urls: [channelUrl] },
+  });
+
+  return Object.values(res.data.result)[0];
+};
+
 const getVideoComments = async (claimId, page = 1, pageSize = 10) => {
   const res = await axios.post('https://comments.odysee.com/api/v2?m=comment.List', {
     jsonrpc: '2.0',
@@ -86,6 +112,8 @@ const getVideoComments = async (claimId, page = 1, pageSize = 10) => {
       sort_by: 3,
     },
   });
+
+  res.data.result.items = await expandCommentsChannels(res.data.result.items);
   return res.data;
 };
 
