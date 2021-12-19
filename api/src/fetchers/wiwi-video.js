@@ -17,9 +17,19 @@ const getVideoDetails = async (videoId) => {
   return res.data;
 };
 
+// {commnet, children} => {comment:{..., children}}
+const restructureReplies = (replies) => replies.map((reply) => {
+  if (!reply.children) return reply.comment;
+
+  return {
+    ...reply.comment,
+    children: restructureReplies(reply.children),
+  };
+});
+
 const getCommentReplies = async (videoId, commentId) => {
   const res = await axios.get(`https://wiwi.video/api/v1/videos/${videoId}/comment-threads/${commentId}`);
-  return res.data.children;
+  return restructureReplies(res.data.children);
 };
 
 const getVideoComments = async (videoId, start = 0, count = 25) => {
@@ -31,25 +41,12 @@ const getVideoComments = async (videoId, start = 0, count = 25) => {
     },
   });
 
-  // expand the replies
-  const commentsWithReplies = await Promise.all(res.data.data.map(async (comment) => {
-    if (!comment.totalReplies) return { comment, children: [] };
-
-    const children = await getCommentReplies(videoId, comment.id);
-    return {
-      comment,
-      children,
-    };
-  }));
-
-  return {
-    total: res.data.total,
-    data: commentsWithReplies,
-  };
+  return res.data;
 };
 
 module.exports = {
   getVideoList,
   getVideoDetails,
   getVideoComments,
+  getCommentReplies,
 };
