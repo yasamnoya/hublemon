@@ -28,24 +28,26 @@ const getVideoDetails = async (title) => {
   return videoDeatils;
 };
 
-const getVideoComments = async (videoId) => {
+const getVideoComments = async (videoId, pageToken) => {
   const res = await axios.get('https://www.googleapis.com/youtube/v3/commentThreads', {
     params: {
       key: process.env.YOUTUBE_KEY,
       part: 'snippet',
       videoId,
+      pageToken,
     },
   });
 
   return res.data;
 };
 
-const getCommentReplies = async (commentId) => {
+const getCommentReplies = async (commentId, pageToken) => {
   const res = await axios.get('https://www.googleapis.com/youtube/v3/comments', {
     params: {
       key: process.env.YOUTUBE_KEY,
       part: 'id,snippet',
       parentId: commentId,
+      pageToken,
     },
   });
 
