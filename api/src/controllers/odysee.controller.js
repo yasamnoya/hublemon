@@ -11,7 +11,7 @@ const getVideoDetails = async (req, res) => {
   const video = {
     claimId: result.claim_id,
     title: result.value.title,
-    thumbnailUrl: result.value.thumbnail.url,
+    embedUrl: `https://odysee.com/$/embed/${result.name}`,
     publishedAt: new Date(result.timestamp).toISOString(),
   };
 

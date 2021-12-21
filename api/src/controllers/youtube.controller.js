@@ -8,7 +8,7 @@ const getVideoDetails = async (req, res) => {
     videoId: result.id.videoId,
     title: result.snippet.tittle,
     description: result.snippet.description,
-    thumbnailUrl: result.snippet.thumbnails.high.url,
+    embedUrl: `https://www.youtube.com/embed/${result.id.videoId}`,
     publishedAt: result.snippet.publishTime,
   };
 
