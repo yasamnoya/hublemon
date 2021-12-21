@@ -27,8 +27,14 @@ const restructureReplies = (replies) => replies.map((reply) => {
   };
 });
 
-const getCommentReplies = async (videoId, commentId) => {
-  const res = await axios.get(`https://wiwi.video/api/v1/videos/${videoId}/comment-threads/${commentId}`);
+const getCommentReplies = async (videoId, commentId, start = 0, count = 25) => {
+  const res = await axios.get(`https://wiwi.video/api/v1/videos/${videoId}/comment-threads/${commentId}`, {
+    params: {
+      start,
+      count,
+      sort: '-createdAt',
+    },
+  });
   return restructureReplies(res.data.children);
 };
 
