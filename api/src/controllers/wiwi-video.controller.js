@@ -1,6 +1,7 @@
 const wiwiVideoFetcher = require('../fetchers/wiwi-video');
+const catchAsync = require('../utils/catchAsync');
 
-const listVideos = async (req, res) => {
+const listVideos = catchAsync(async (req, res) => {
   const { start, count } = req.query;
   const result = await wiwiVideoFetcher.getVideoList(start, count);
   const videos = result.data.map((video) => ({
@@ -14,9 +15,9 @@ const listVideos = async (req, res) => {
     total: result.total,
     videos,
   });
-};
+});
 
-const getVideoDetails = async (req, res) => {
+const getVideoDetails = catchAsync(async (req, res) => {
   const { videoId } = req.params;
   const result = await wiwiVideoFetcher.getVideoDetails(videoId);
 
@@ -29,9 +30,9 @@ const getVideoDetails = async (req, res) => {
   };
 
   res.send(video);
-};
+});
 
-const listVideoComments = async (req, res) => {
+const listVideoComments = catchAsync(async (req, res) => {
   const { videoId } = req.params;
   const { start, count } = req.query;
   const result = await wiwiVideoFetcher.getVideoComments(videoId, start, count);
@@ -54,7 +55,7 @@ const listVideoComments = async (req, res) => {
     total: result.total,
     comments,
   });
-};
+});
 
 const extractReplies = (replies) => replies.filter((reply) => !reply.isDeleted).map((reply) => {
   let children = [];
@@ -77,7 +78,7 @@ const extractReplies = (replies) => replies.filter((reply) => !reply.isDeleted).
   };
 });
 
-const listCommentReplies = async (req, res) => {
+const listCommentReplies = catchAsync(async (req, res) => {
   const { videoId, commentId } = req.params;
   const result = await wiwiVideoFetcher.getCommentReplies(videoId, commentId);
 
@@ -87,7 +88,7 @@ const listCommentReplies = async (req, res) => {
     total: replies.length,
     replies,
   });
-};
+});
 
 module.exports = {
   listVideos,

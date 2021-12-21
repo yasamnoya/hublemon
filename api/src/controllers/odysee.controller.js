@@ -1,6 +1,7 @@
 const odyseeFetcher = require('../fetchers/odysee');
+const catchAsync = require('../utils/catchAsync');
 
-const getVideoDetails = async (req, res) => {
+const getVideoDetails = catchAsync(async (req, res) => {
   const { videoTitle } = req.params;
   let result = await odyseeFetcher.getVideoDetails(videoTitle);
 
@@ -16,9 +17,9 @@ const getVideoDetails = async (req, res) => {
   };
 
   res.send(video);
-};
+});
 
-const listVideoComments = async (req, res) => {
+const listVideoComments = catchAsync(async (req, res) => {
   const { claimId } = req.params;
   const { page, pageSize } = req.query;
   const result = await odyseeFetcher.getVideoComments(claimId, page, pageSize);
@@ -39,9 +40,9 @@ const listVideoComments = async (req, res) => {
     total: result.result.total_items,
     comments,
   });
-};
+});
 
-const listCommentReplies = async (req, res) => {
+const listCommentReplies = catchAsync(async (req, res) => {
   const { commentId } = req.params;
   const { page, pageSize } = req.query;
   const result = await odyseeFetcher.getCommentReplies(commentId, page, pageSize);
@@ -61,7 +62,7 @@ const listCommentReplies = async (req, res) => {
     total: result.result.total_items,
     replies,
   });
-};
+});
 
 module.exports = {
   getVideoDetails,

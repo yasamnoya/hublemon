@@ -1,6 +1,7 @@
 const youtuberFetcher = require('../fetchers/youtube');
+const catchAsync = require('../utils/catchAsync');
 
-const getVideoDetails = async (req, res) => {
+const getVideoDetails = catchAsync(async (req, res) => {
   const { videoTitle } = req.params;
   const result = await youtuberFetcher.getVideoDetails(videoTitle);
 
@@ -13,9 +14,9 @@ const getVideoDetails = async (req, res) => {
   };
 
   res.send(video);
-};
+});
 
-const listVideoComments = async (req, res) => {
+const listVideoComments = catchAsync(async (req, res) => {
   const { videoId } = req.params;
   const { pageToken } = req.query;
   const result = await youtuberFetcher.getVideoComments(videoId, pageToken);
@@ -35,9 +36,9 @@ const listVideoComments = async (req, res) => {
     nextPageToken: result.nextPageToken,
     comments,
   });
-};
+});
 
-const listCommentReplies = async (req, res) => {
+const listCommentReplies = catchAsync(async (req, res) => {
   const { commentId } = req.params;
   const { pageToken } = req.query;
   const result = await youtuberFetcher.getCommentReplies(commentId, pageToken);
@@ -56,7 +57,7 @@ const listCommentReplies = async (req, res) => {
     nextPageToken: result.nextPageToken,
     replies,
   });
-};
+});
 
 module.exports = {
   getVideoDetails,
