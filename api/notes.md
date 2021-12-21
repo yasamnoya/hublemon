@@ -95,7 +95,7 @@
 {
   claimId: String,
   title: String,
-  thumbnailUrl: String,
+  embedUrl: String,
   publishedAt: Date,
 }
 ```
@@ -151,7 +151,7 @@
   videoId: String,
   title: String,
   description: String,
-  thumbnailUrl: String
+  embedUrl: String
   publishedAt: Date,
 }
 ```
