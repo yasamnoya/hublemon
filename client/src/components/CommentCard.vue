@@ -36,11 +36,18 @@
         class="btn fw-bold"
       >
         ▾ {{ comment.replies }} 個回覆
+        <span
+          v-if="isFetchingReplies"
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
       </button>
       <div v-if="comment.children.length" class="w-100">
         <comment-card
           v-for="reply of comment.children"
           :key="reply.commentId"
+          :video="video"
           :comment="reply"
         ></comment-card>
       </div>
@@ -69,18 +76,30 @@ export default {
       return moment(date).format('YYYY 年 MM 月 DD 日');
     },
     async fetchReplies(commentId) {
+      let url = '';
+      switch (this.comment.provider) {
+        case 'wiwivideo':
+          url = `/wiwivideo/videos/${this.video.wiwivideo.videoId}/comments/${commentId}/replies`;
+          break;
+        case 'odysee':
+          url = `/odysee/videos/${this.video.odysee.claimId}/comments/${commentId}/replies`;
+          break;
+        case 'youtube':
+          url = `/youtube/videos/${this.video.youtube.claimId}/comments/${commentId}/replies`;
+          break;
+        default:
+          throw new Error();
+      }
+
       this.isFetchingReplies = true;
       try {
         let children = [];
         const COUNT = 50;
-        const res = await axios.get(
-          `wiwivideo/videos/${this.video.wiwivideo.videoId}/comments/${commentId}/replies`,
-          {
-            params: {
-              count: COUNT,
-            },
+        const res = await axios.get(url, {
+          params: {
+            count: COUNT,
           },
-        );
+        });
         children = children.concat(res.data.replies);
 
         if (children.length === res.data.total) {
@@ -91,15 +110,12 @@ export default {
         const starts = [...Array(res.data.total).keys()].filter((n) => !(n % COUNT) && n > 0);
         await Promise.all(
           starts.map(async (start) => {
-            const resInLoop = await axios.get(
-              `wiwivideo/videos/${this.video.wiwivideo.videoId}/comments/${commentId}/replies`,
-              {
-                params: {
-                  start,
-                  count: COUNT,
-                },
+            const resInLoop = await axios.get(url, {
+              params: {
+                start,
+                count: COUNT,
               },
-            );
+            });
             children = children.concat(resInLoop.data.replies);
           }),
         );

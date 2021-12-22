@@ -43,13 +43,15 @@
             <span class="visually-hidden mx-auto">Loading...</span>
           </div>
         </div>
-        <comment-card
-          v-for="comment of comments"
-          :key="comment.commentId"
-          :video="video"
-          :comment="comment"
-          class="w-100"
-        ></comment-card>
+        <div v-if="!isLoading.comments">
+          <comment-card
+            v-for="comment of comments"
+            :key="comment.commentId"
+            :video="video"
+            :comment="comment"
+            class="w-100"
+          ></comment-card>
+        </div>
       </div>
     </div>
   </div>
@@ -90,7 +92,13 @@ export default {
     await Promise.all([this.fetchOdyseeVideo(), this.fetchYoutubeVideo()]);
 
     this.isLoading.comments = true;
-    await this.fetchWiwivideoComments();
+    await Promise.all([
+      this.fetchComments(`wiwivideo/videos/${this.video.wiwivideo.videoId}/comments`),
+      this.fetchComments(`odysee/videos/${this.video.odysee.claimId}/comments`),
+    ]);
+    this.comments.sort(
+      (comment1, comment2) => moment(comment1.createdAt) > moment(comment2.createdAt),
+    );
     this.isLoading.comments = false;
   },
   methods: {
@@ -127,15 +135,11 @@ export default {
     generateTimeString(date) {
       return moment(date).format('YYYY 年 MM 月 DD 日');
     },
-    async fetchWiwivideoComments() {
+    async fetchComments(url) {
       try {
         let comments = [];
         const COUNT = 50;
-        const res = await axios.get(`wiwivideo/videos/${this.video.wiwivideo.videoId}/comments`, {
-          params: {
-            count: COUNT,
-          },
-        });
+        const res = await axios.get(url);
         comments = comments.concat(res.data.comments);
 
         if (comments.length === res.data.total) {
@@ -146,15 +150,12 @@ export default {
         const starts = [...Array(res.data.total).keys()].filter((n) => !(n % COUNT) && n > 0);
         await Promise.all(
           starts.map(async (start) => {
-            const resInLoop = await axios.get(
-              `wiwivideo/videos/${this.video.wiwivideo.videoId}/comments`,
-              {
-                params: {
-                  start,
-                  count: COUNT,
-                },
+            const resInLoop = await axios.get(url, {
+              params: {
+                start,
+                count: COUNT,
               },
-            );
+            });
             comments = comments.concat(resInLoop.data.comments);
           }),
         );
