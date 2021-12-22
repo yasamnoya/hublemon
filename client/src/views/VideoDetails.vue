@@ -1,41 +1,48 @@
 <template>
   <div id="body" class="bg-light py-5">
-    <div id="videoGrid" class="container g-3">
-      <div class="row h-100">
-        <div class="col-lg-8 col-12 mb-1 mb-lg-0">
-          <video-iframe
-            :video="video.wiwivideo"
-            :isLoading="isLoading.video.wiwivideo"
-            platform="wiwi.video"
-          ></video-iframe>
-        </div>
-        <div class="col-lg-4 col-12 container">
-          <div class="row h-100">
-            <div class="col-12 h-lg-50">
-              <video-iframe
-                :video="video.odysee"
-                :isLoading="isLoading.video.odysee"
-                platform="Odysee"
-              ></video-iframe>
-            </div>
-            <div class="col-12 h-lg-50">
-              <video-iframe
-                :video="video.youtube"
-                :isLoading="isLoading.video.youtube"
-                platform="Youtube"
-              ></video-iframe>
+    <div v-if="video.wiwivideo">
+      <div id="videoGrid" class="container g-3 mb-3 mb-md-5">
+        <div class="row h-100">
+          <div class="col-lg-8 col-12 mb-1 mb-lg-0">
+            <video-iframe
+              :video="video.wiwivideo"
+              :isLoading="isLoading.video.wiwivideo"
+              platform="wiwi.video"
+            ></video-iframe>
+          </div>
+          <div class="col-lg-4 col-12 container">
+            <div class="row h-100">
+              <div class="col-12 h-lg-50">
+                <video-iframe
+                  :video="video.odysee"
+                  :isLoading="isLoading.video.odysee"
+                  platform="Odysee"
+                ></video-iframe>
+              </div>
+              <div class="col-12 h-lg-50">
+                <video-iframe
+                  :video="video.youtube"
+                  :isLoading="isLoading.video.youtube"
+                  platform="Youtube"
+                ></video-iframe>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div id="videoInfo container"></div>
+      <div id="videoInfo" class="container">
+        <h2 class="fw-bold">{{ video.wiwivideo.title }}</h2>
+        <p>發佈於 {{ video.wiwivideo.publishedDateString }}</p>
+        <hr />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import moment from 'moment';
 import VideoIframe from '../components/VideoIframe.vue';
 
 export default {
@@ -58,6 +65,9 @@ export default {
   }),
   async created() {
     await this.fetchWiwivideoVideo();
+    this.video.wiwivideo.publishedDateString = this.generateTimeString(
+      this.video.wiwivideo.publishedAt,
+    );
     await Promise.all([this.fetchOdyseeVideo(), this.fetchYoutubeVideo()]);
   },
   methods: {
@@ -91,6 +101,9 @@ export default {
       }
       this.isLoading.video.youtube = false;
     },
+    generateTimeString(date) {
+      return moment(date).format('YYYY 年 MM 月 DD 日');
+    },
   },
 };
 </script>
@@ -106,7 +119,7 @@ iframe {
 
 @media (min-width: 768px) {
   #videoGrid {
-    height: 500px;
+    height: 512px;
   }
 }
 </style>
