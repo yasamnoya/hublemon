@@ -41,8 +41,8 @@ const listVideoComments = catchAsync(async (req, res) => {
       replies: item.replies,
       children: [],
       author: {
-        name: item.channel.name,
-        avatarUrl: item.channel.value.thumbnail ? `${item.channel.value.thumbnail.url}?quality=85&height=32&width=0` : null,
+        name: item.channel.name || '已刪除的使用者',
+        avatarUrl: item.channel.value && item.channel.value.thumbnail ? `${item.channel.value.thumbnail.url}?quality=85&height=32&width=0` : null,
       },
     }));
 
