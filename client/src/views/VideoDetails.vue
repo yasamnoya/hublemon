@@ -92,11 +92,17 @@ export default {
     await Promise.all([this.fetchOdyseeVideo(), this.fetchYoutubeVideo()]);
 
     this.isLoading.comments = true;
-    await Promise.all([
-      this.fetchComments(`wiwivideo/videos/${this.video.wiwivideo.videoId}/comments`),
-      this.fetchComments(`odysee/videos/${this.video.odysee.claimId}/comments`),
-      this.fetchComments(`youtube/videos/${this.video.youtube.videoId}/comments`),
-    ]);
+
+    const promises = [];
+    if (this.video.wiwivideo) {
+      promises.push(
+        this.fetchComments(`wiwivideo/videos/${this.video.wiwivideo.videoId}/comments`),
+      );
+    }
+    if (this.video.odysee) promises.push(this.fetchComments(`odysee/videos/${this.video.odysee.claimId}/comments`));
+    if (this.video.youtube) promises.push(this.fetchComments(`youtube/videos/${this.video.youtube.videoId}/comments`));
+
+    await Promise.all(promises);
     this.comments.sort(
       (comment1, comment2) => moment(comment1.createdAt).unix() - moment(comment2.createdAt).unix(),
     );
