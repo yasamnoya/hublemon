@@ -42,7 +42,7 @@ const listVideoComments = catchAsync(async (req, res) => {
       children: [],
       author: {
         name: item.channel.name,
-        avatarUrl: item.channel.value.thumbnail ? item.channel.value.thumbnail.url : null,
+        avatarUrl: item.channel.value.thumbnail ? `${item.channel.value.thumbnail.url}?quality=85&height=32&width=0` : null,
       },
     }));
 
