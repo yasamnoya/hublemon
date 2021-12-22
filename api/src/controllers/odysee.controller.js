@@ -37,7 +37,7 @@ const listVideoComments = catchAsync(async (req, res) => {
       provider: 'odysee',
       commentId: item.comment_id,
       text: item.comment,
-      createdAt: new Date(item.timestamp).toISOString(),
+      createdAt: new Date(item.timestamp * 1000).toISOString(),
       replies: item.replies,
       children: [],
       author: {
@@ -68,7 +68,7 @@ const listCommentReplies = catchAsync(async (req, res) => {
       text: item.comment,
       replies: item.replies || 0,
       children: [],
-      createdAt: new Date(item.timestamp).toISOString(),
+      createdAt: new Date(item.timestamp * 1000).toISOString(),
       author: {
         name: item.channel.name,
         avatarUrl: item.channel.value.thumbnail ? item.channel.value.thumbnail.url : null,

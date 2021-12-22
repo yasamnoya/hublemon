@@ -95,9 +95,10 @@ export default {
     await Promise.all([
       this.fetchComments(`wiwivideo/videos/${this.video.wiwivideo.videoId}/comments`),
       this.fetchComments(`odysee/videos/${this.video.odysee.claimId}/comments`),
+      this.fetchComments(`youtube/videos/${this.video.youtube.videoId}/comments`),
     ]);
     this.comments.sort(
-      (comment1, comment2) => moment(comment1.createdAt) > moment(comment2.createdAt),
+      (comment1, comment2) => moment(comment1.createdAt).unix() - moment(comment2.createdAt).unix(),
     );
     this.isLoading.comments = false;
   },
