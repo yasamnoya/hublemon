@@ -46,7 +46,9 @@
         <comment-card
           v-for="comment of comments"
           :key="comment.commentId"
+          :video="video"
           :comment="comment"
+          class="w-100"
         ></comment-card>
       </div>
     </div>
@@ -157,7 +159,6 @@ export default {
           }),
         );
 
-        console.log(comments);
         this.comments = this.comments.concat(comments);
       } catch (e) {
         console.warn(e);

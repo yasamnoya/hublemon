@@ -36,6 +36,7 @@ const listVideoComments = catchAsync(async (req, res) => {
       text: item.snippet.topLevelComment.snippet.textOriginal,
       createdAt: item.snippet.topLevelComment.snippet.publishedAt,
       replies: item.snippet.totalReplyCount,
+      children: [],
       author: {
         name: item.snippet.topLevelComment.snippet.authorDisplayName,
         avatarUrl: item.snippet.topLevelComment.snippet.authorProfileImageUrl,
@@ -63,6 +64,9 @@ const listCommentReplies = catchAsync(async (req, res) => {
       commentId: item.id,
       text: item.snippet.textOriginal,
       createdAt: item.snippet.publishedAt,
+      // youtube doesn't support replying a reply
+      replies: 0,
+      children: [],
       author: {
         name: item.snippet.authorDisplayName,
         avatarUrl: item.snippet.authorProfileImageUrl,

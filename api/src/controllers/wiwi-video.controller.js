@@ -64,7 +64,7 @@ const listVideoComments = catchAsync(async (req, res) => {
         name: comment.account.name,
         avatarUrl: comment.account.avatar ? `https://wiwi.video${comment.account.avatar.path}` : null,
       },
-      children: comment.children,
+      children: comment.children || [],
     }));
 
     return {
@@ -102,7 +102,7 @@ const listCommentReplies = catchAsync(async (req, res) => {
   const { videoId, commentId } = req.params;
   const { start, count } = req.query;
 
-  const cached = await useCache(`wiwivideo.listCommentReplies/${videoId}, {start: ${start}, count: ${count}}`, async () => {
+  const cached = await useCache(`wiwivideo.listCommentReplies/${commentId}, {start: ${start}, count: ${count}}`, async () => {
     const result = await wiwiVideoFetcher.getCommentReplies(videoId, commentId, start, count);
 
     // result.children = replies of the comment

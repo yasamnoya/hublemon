@@ -39,6 +39,7 @@ const listVideoComments = catchAsync(async (req, res) => {
       text: item.comment,
       createdAt: new Date(item.timestamp).toISOString(),
       replies: item.replies,
+      children: [],
       author: {
         name: item.channel.name,
         avatarUrl: item.channel.value.thumbnail ? item.channel.value.thumbnail.url : null,
@@ -66,6 +67,7 @@ const listCommentReplies = catchAsync(async (req, res) => {
       commentId: item.comment_id,
       text: item.comment,
       replies: item.replies || 0,
+      children: [],
       createdAt: new Date(item.timestamp).toISOString(),
       author: {
         name: item.channel.name,

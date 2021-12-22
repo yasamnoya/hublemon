@@ -52,6 +52,7 @@
     text: String,
     createdAt: Date,
     replies: Number,
+    children: []
     author: {
       name: String,
       avatarUrl: String | null,
@@ -115,6 +116,7 @@
     text: String,
     createdAt: Date,
     replies: Number,
+    children: []
     author: {
       name: String,
       avatarUrl: String | null,
@@ -134,6 +136,7 @@
     text: String,
     createdAt: Date,
     replies: Number,
+    children: []
     author: {
       name: String,
       avatarUrl: String | null,
@@ -174,6 +177,7 @@
     text: String,
     createdAt: Date,
     replies: Number,
+    children: []
     author: {
       name: String,
       avatarUrl: String,
@@ -192,6 +196,8 @@
     commentId: String,
     text: String,
     createdAt: Date,
+    replies: Number,
+    children: []
     author: {
       name: String,
       avatarUrl: String,

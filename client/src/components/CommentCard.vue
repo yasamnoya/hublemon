@@ -28,19 +28,35 @@
         <p>{{ comment.text }}</p>
       </div>
     </div>
-    <div v-if="comment.replies > 0" class="d-flex">
-      <div class="spacer"></div>
-      <button class="btn fw-bold">▾ {{ comment.replies }} 個回覆</button>
+    <div v-if="comment.replies || comment.children.length > 0" class="d-flex w-100">
+      <div class="spacer border-start border-2 border-secondary"></div>
+      <button
+        v-if="!comment.children.length"
+        @click="fetchReplies(comment.commentId)"
+        class="btn fw-bold"
+      >
+        ▾ {{ comment.replies }} 個回覆
+      </button>
+      <div v-if="comment.children.length" class="w-100">
+        <comment-card
+          v-for="reply of comment.children"
+          :key="reply.commentId"
+          :comment="reply"
+        ></comment-card>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import moment from 'moment';
+import axios from 'axios';
 
 export default {
+  name: 'CommentCard',
   props: {
     comment: {},
+    video: {},
   },
   data: () => ({
     isFetchingReplies: false,
@@ -51,6 +67,49 @@ export default {
   methods: {
     generateTimeString(date) {
       return moment(date).format('YYYY 年 MM 月 DD 日');
+    },
+    async fetchReplies(commentId) {
+      this.isFetchingReplies = true;
+      try {
+        let children = [];
+        const COUNT = 50;
+        const res = await axios.get(
+          `wiwivideo/videos/${this.video.wiwivideo.videoId}/comments/${commentId}/replies`,
+          {
+            params: {
+              count: COUNT,
+            },
+          },
+        );
+        children = children.concat(res.data.replies);
+
+        if (children.length === res.data.total) {
+          this.comment.children = children;
+          return;
+        }
+
+        const starts = [...Array(res.data.total).keys()].filter((n) => !(n % COUNT) && n > 0);
+        await Promise.all(
+          starts.map(async (start) => {
+            const resInLoop = await axios.get(
+              `wiwivideo/videos/${this.video.wiwivideo.videoId}/comments/${commentId}/replies`,
+              {
+                params: {
+                  start,
+                  count: COUNT,
+                },
+              },
+            );
+            children = children.concat(resInLoop.data.replies);
+          }),
+        );
+
+        this.comment.children = this.comment.children.concat(children);
+        console.log(this.comment.children);
+      } catch (e) {
+        console.warn(e);
+      }
+      this.isFetchingReplies = false;
     },
   },
 };
