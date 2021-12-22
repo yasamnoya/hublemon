@@ -25,7 +25,7 @@
           </p>
           <p class="text-muted">{{ comment.createdDateString }}</p>
         </div>
-        <p>{{ comment.text }}</p>
+        <p v-html="comment.text">{{ comment.text.trim() }}</p>
       </div>
     </div>
     <div v-if="comment.replies || comment.children.length > 0" class="d-flex w-100">
