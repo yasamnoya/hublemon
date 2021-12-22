@@ -17,7 +17,7 @@ const search = async (title) => {
 
 const filterOutTheVideo = (videoList, title) => {
   const filteredVideo = videoList.filter(
-    (video) => stringSimilarity.compareTwoStrings(title, video.snippet.title) > 0.9,
+    (video) => stringSimilarity.compareTwoStrings(title, video.snippet.title) > 0.7,
   );
   return filteredVideo[0];
 };
