@@ -34,7 +34,20 @@
       <div id="videoInfo" class="container">
         <h2 class="fw-bold">{{ video.wiwivideo.title }}</h2>
         <p>發佈於 {{ video.wiwivideo.publishedDateString }}</p>
-        <hr />
+        <hr class="my-4" />
+      </div>
+
+      <div id="comments" class="container">
+        <div v-if="isLoading.comments" class="d-flex justify-content-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden mx-auto">Loading...</span>
+          </div>
+        </div>
+        <comment-card
+          v-for="comment of comments"
+          :key="comment.commentId"
+          :comment="comment"
+        ></comment-card>
       </div>
     </div>
   </div>
@@ -44,10 +57,12 @@
 import axios from 'axios';
 import moment from 'moment';
 import VideoIframe from '../components/VideoIframe.vue';
+import CommentCard from '../components/CommentCard.vue';
 
 export default {
   components: {
     VideoIframe,
+    CommentCard,
   },
   data: () => ({
     video: {
@@ -55,12 +70,14 @@ export default {
       odysee: null,
       youtube: null,
     },
+    comments: [],
     isLoading: {
       video: {
         wiwivideo: true,
         odysee: true,
         youtube: true,
       },
+      comments: true,
     },
   }),
   async created() {
@@ -69,6 +86,10 @@ export default {
       this.video.wiwivideo.publishedAt,
     );
     await Promise.all([this.fetchOdyseeVideo(), this.fetchYoutubeVideo()]);
+
+    this.isLoading.comments = true;
+    await this.fetchWiwivideoComments();
+    this.isLoading.comments = false;
   },
   methods: {
     async fetchWiwivideoVideo() {
@@ -103,6 +124,44 @@ export default {
     },
     generateTimeString(date) {
       return moment(date).format('YYYY 年 MM 月 DD 日');
+    },
+    async fetchWiwivideoComments() {
+      try {
+        let comments = [];
+        const COUNT = 50;
+        const res = await axios.get(`wiwivideo/videos/${this.video.wiwivideo.videoId}/comments`, {
+          params: {
+            count: COUNT,
+          },
+        });
+        comments = comments.concat(res.data.comments);
+
+        if (comments.length === res.data.total) {
+          this.comments = this.comments.concat(comments);
+          return;
+        }
+
+        const starts = [...Array(res.data.total).keys()].filter((n) => !(n % COUNT) && n > 0);
+        await Promise.all(
+          starts.map(async (start) => {
+            const resInLoop = await axios.get(
+              `wiwivideo/videos/${this.video.wiwivideo.videoId}/comments`,
+              {
+                params: {
+                  start,
+                  count: COUNT,
+                },
+              },
+            );
+            comments = comments.concat(resInLoop.data.comments);
+          }),
+        );
+
+        console.log(comments);
+        this.comments = this.comments.concat(comments);
+      } catch (e) {
+        console.warn(e);
+      }
     },
   },
 };
