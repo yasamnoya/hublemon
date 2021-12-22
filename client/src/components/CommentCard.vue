@@ -121,7 +121,6 @@ export default {
         );
 
         this.comment.children = this.comment.children.concat(children);
-        console.log(this.comment.children);
       } catch (e) {
         console.warn(e);
       }
