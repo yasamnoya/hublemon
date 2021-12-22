@@ -13,6 +13,7 @@ const getVideoDetails = catchAsync(async (req, res) => {
     if (!result) result = await odyseeFetcher.getVideoDetails(videoTitle);
 
     const video = {
+      provider: 'odysee',
       claimId: result.claim_id,
       title: result.value.title,
       embedUrl: `https://odysee.com/$/embed/${result.name}`,
@@ -33,6 +34,7 @@ const listVideoComments = catchAsync(async (req, res) => {
     const result = await odyseeFetcher.getVideoComments(claimId, page, pageSize);
 
     const comments = result.result.items.map((item) => ({
+      provider: 'odysee',
       commentId: item.comment_id,
       text: item.comment,
       createdAt: new Date(item.timestamp).toISOString(),
@@ -60,6 +62,7 @@ const listCommentReplies = catchAsync(async (req, res) => {
     const result = await odyseeFetcher.getCommentReplies(commentId, page, pageSize);
 
     const replies = result.result.items.map((item) => ({
+      provider: 'odysee',
       commentId: item.comment_id,
       text: item.comment,
       replies: item.replies || 0,

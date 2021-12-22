@@ -9,6 +9,7 @@ const getVideoDetails = catchAsync(async (req, res) => {
     const result = await youtuberFetcher.getVideoDetails(videoTitle);
 
     const video = {
+      provider: 'youtube',
       videoId: result.id.videoId,
       title: result.snippet.tittle,
       description: result.snippet.description,
@@ -30,6 +31,7 @@ const listVideoComments = catchAsync(async (req, res) => {
     const result = await youtuberFetcher.getVideoComments(videoId, pageToken);
 
     const comments = result.items.map((item) => ({
+      provider: 'youtube',
       commentId: item.id,
       text: item.snippet.topLevelComment.snippet.textOriginal,
       createdAt: item.snippet.topLevelComment.snippet.publishedAt,
@@ -57,6 +59,7 @@ const listCommentReplies = catchAsync(async (req, res) => {
     const result = await youtuberFetcher.getCommentReplies(commentId, pageToken);
 
     const replies = result.items.map((item) => ({
+      provider: 'youtube',
       commentId: item.id,
       text: item.snippet.textOriginal,
       createdAt: item.snippet.publishedAt,

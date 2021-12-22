@@ -19,6 +19,7 @@
 {
   total:Number,
   videos: [{
+    provider: 'wiwivideo',
     vidoeId: Number,
     title: String,
     thumbailUrl: String,
@@ -31,6 +32,7 @@
 
 ```js
 {
+  provider: 'wiwivideo',
   videoId: Number,
   title: String,
   description: String,
@@ -45,6 +47,7 @@
 {
   total: Number,
   comments: [{
+    provider: 'wiwivideo',
     commentId: Number,
     text: String,
     createdAt: Date,
@@ -63,6 +66,7 @@
 {
   total: Number,
   replies: [{
+    provider: 'wiwivideo',
     commentId: Number,
     text: String,
     replies: Number,
@@ -105,7 +109,8 @@
 ```js
 {
   total: Number,
-  comments: {
+  comments: [{
+    provider: 'odysee',
     commentId: String,
     text: String,
     createdAt: Date,
@@ -114,7 +119,7 @@
       name: String,
       avatarUrl: String | null,
     }
-  }
+  }]
 }
 ```
 
@@ -123,7 +128,8 @@
 ```js
 {
   total: Number,
-  comments: {
+  comments: [{
+    provider: 'odysee',
     commentId: String,
     text: String,
     createdAt: Date,
@@ -132,7 +138,7 @@
       name: String,
       avatarUrl: String | null,
     }
-  }
+  }]
 }
 ```
 
@@ -148,6 +154,7 @@
 
 ```js
 {
+  provider: 'youtube',
   videoId: String,
   title: String,
   description: String,
@@ -161,7 +168,8 @@
 ```js
 {
   nextPageToken: String,
-  {
+  comments: [{
+    provider: 'youtube',
     commentId: String,
     text: String,
     createdAt: Date,
@@ -170,7 +178,7 @@
       name: String,
       avatarUrl: String,
     },
-  }
+  }]
 }
 ```
 
@@ -179,12 +187,15 @@
 ```js
 {
   nextPageToken: String,
-  commentId: String,
-  text: String,
-  createdAt: Date,
-  author: {
-    name: String,
-    avatarUrl: String,
-  },
+  replies: [{
+    provider: 'youtube',
+    commentId: String,
+    text: String,
+    createdAt: Date,
+    author: {
+      name: String,
+      avatarUrl: String,
+    },
+  }]
 }
 ```

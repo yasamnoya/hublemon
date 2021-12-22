@@ -8,6 +8,7 @@ const listVideos = catchAsync(async (req, res) => {
   const cached = await useCache(`wiwivideo.listVideos, {start: ${start}, count: ${count}}`, async () => {
     const result = await wiwiVideoFetcher.getVideoList(start, count);
     const videos = result.data.map((video) => ({
+      provider: 'wiwivideo',
       videoId: video.id,
       title: video.name,
       thumbnailUrl: `https://wiwi.video${video.previewPath}`,
@@ -30,6 +31,7 @@ const getVideoDetails = catchAsync(async (req, res) => {
     const result = await wiwiVideoFetcher.getVideoDetails(videoId);
 
     const video = {
+      provider: 'wiwivideo',
       videoId: result.id,
       title: result.name,
       description: result.description,
@@ -53,6 +55,7 @@ const listVideoComments = catchAsync(async (req, res) => {
     const filteredData = result.data.filter((comment) => !comment.isDeleted);
 
     const comments = filteredData.map((comment) => ({
+      provider: 'wiwivideo',
       commentId: comment.id,
       text: comment.text,
       createdAt: comment.createdAt,
@@ -82,6 +85,7 @@ const extractReplies = (replies) => replies.filter((reply) => !reply.isDeleted).
   }
 
   return {
+    provider: 'wiwivideo',
     commentId: reply.id,
     text: reply.text,
     replies: reply.totalReplies,
