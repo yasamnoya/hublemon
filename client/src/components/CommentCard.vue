@@ -14,6 +14,15 @@
             class="rounded-circle me-3"
           />
           <h5 class="me-2 fw-bold">{{ comment.author.name }}</h5>
+          <p v-if="comment.provider == 'wiwivideo'">
+            <span class="badge bg-wiwivideo rounded-pill me-2">wiwi.video</span>
+          </p>
+          <p v-if="comment.provider == 'odysee'">
+            <span class="badge bg-odysee rounded-pill me-2">Odysee</span>
+          </p>
+          <p v-if="comment.provider == 'youtube'">
+            <span class="badge bg-youtube rounded-pill me-2">Youtube</span>
+          </p>
           <p class="text-muted">{{ comment.createdDateString }}</p>
         </div>
         <p>{{ comment.text }}</p>
@@ -50,5 +59,17 @@ export default {
 <style scoped>
 .spacer {
   width: 32px;
+}
+
+.bg-wiwivideo {
+  background-color: #f3690c;
+}
+
+.bg-odysee {
+  background-color: #df0055;
+}
+
+.bg-youtube {
+  background-color: #fe0001;
 }
 </style>
