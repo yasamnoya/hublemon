@@ -60,6 +60,7 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
+import emojiStrip from 'emoji-strip';
 import VideoIframe from '../components/VideoIframe.vue';
 import CommentCard from '../components/CommentCard.vue';
 
@@ -109,6 +110,11 @@ export default {
     this.isLoading.comments = false;
   },
   methods: {
+    cleanTitle(title) {
+      const removedEmoji = emojiStrip(title);
+      const encoded = encodeURIComponent(removedEmoji);
+      return encoded;
+    },
     async fetchWiwivideoVideo() {
       this.isLoading.video.wiwivideo = true;
       try {
@@ -123,7 +129,7 @@ export default {
       this.isLoading.video.odysee = true;
       try {
         const res = await axios.get(
-          `/odysee/videos/${encodeURIComponent(this.video.wiwivideo.title)}`,
+          `/odysee/videos/${this.cleanTitle(this.video.wiwivideo.title)}`,
         );
         this.video.odysee = res.data;
       } catch (e) {
@@ -135,7 +141,7 @@ export default {
       this.isLoading.video.youtube = true;
       try {
         const res = await axios.get(
-          `/youtube/videos/${encodeURIComponent(this.video.wiwivideo.title)}`,
+          `/youtube/videos/${this.cleanTitle(this.video.wiwivideo.title)}`,
         );
         this.video.youtube = res.data;
       } catch (e) {
