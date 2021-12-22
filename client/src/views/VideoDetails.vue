@@ -3,23 +3,23 @@
     <div v-if="video.wiwivideo">
       <div id="videoGrid" class="container g-3 mb-3 mb-md-5">
         <div class="row h-100">
-          <div class="col-lg-8 col-12 mb-1 mb-lg-0">
+          <div class="col-md-8 col-12 mb-1 mb-md-0">
             <video-iframe
               :video="video.wiwivideo"
               :isLoading="isLoading.video.wiwivideo"
               platform="wiwi.video"
             ></video-iframe>
           </div>
-          <div class="col-lg-4 col-12 container">
+          <div class="col-md-4 col-12 container">
             <div class="row h-100">
-              <div class="col-12 h-lg-50">
+              <div class="col-12 h-md-50">
                 <video-iframe
                   :video="video.odysee"
                   :isLoading="isLoading.video.odysee"
                   platform="Odysee"
                 ></video-iframe>
               </div>
-              <div class="col-12 h-lg-50">
+              <div class="col-12 h-md-50">
                 <video-iframe
                   :video="video.youtube"
                   :isLoading="isLoading.video.youtube"
@@ -122,7 +122,9 @@ export default {
     async fetchOdyseeVideo() {
       this.isLoading.video.odysee = true;
       try {
-        const res = await axios.get(`/odysee/videos/${this.video.wiwivideo.title}`);
+        const res = await axios.get(
+          `/odysee/videos/${encodeURIComponent(this.video.wiwivideo.title)}`,
+        );
         this.video.odysee = res.data;
       } catch (e) {
         console.warn(e);
@@ -132,7 +134,9 @@ export default {
     async fetchYoutubeVideo() {
       this.isLoading.video.youtube = true;
       try {
-        const res = await axios.get(`/youtube/videos/${this.video.wiwivideo.title}`);
+        const res = await axios.get(
+          `/youtube/videos/${encodeURIComponent(this.video.wiwivideo.title)}`,
+        );
         this.video.youtube = res.data;
       } catch (e) {
         console.warn(e);
