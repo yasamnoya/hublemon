@@ -18,7 +18,7 @@
           <button
             v-if="videos.length != 0 && videos.videos.length < videos.total && !isFetchingVideos"
             @click="loadMore"
-            class="btn btn-outline-dark w-100"
+            class="btn w-100"
           >
             <h4>▾ 更多</h4>
           </button>
