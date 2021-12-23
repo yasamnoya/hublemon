@@ -1,16 +1,19 @@
 <template>
-  <div id="app">
+  <div id="app" class="d-flex flex-column">
     <Nav />
     <router-view />
+    <Footer class="mt-auto" />
   </div>
 </template>
 
 <script>
 import Nav from './components/Nav.vue';
+import Footer from './components/Footer.vue';
 
 export default {
   components: {
     Nav,
+    Footer,
   },
 };
 </script>
