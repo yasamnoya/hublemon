@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  redis:
+    container_name: redis
+    image: redis:6.2-alpine
+    networks:
+      - hublemon
+
+  api:
+    depends_on:
+      - redis
+    build:
+      context: ./api
+    env_file: ./.env
+    ports: 
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    networks:
+      - hublemon
+    command: ["npm", "start"]
+
+  client:
+    depends_on:
+      - api
+    build:
+      context: ./client
+      args:
+        - VUE_APP_BACKEND_URL=${VUE_APP_BACKEND_URL}
+    ports:
+      - "${FRONTEND_PORT}:80"
+    networks:
+      - hublemon
+  
+
+networks:
+  hublemon: 
