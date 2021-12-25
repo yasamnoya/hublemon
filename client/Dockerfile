@@ -4,6 +4,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+ARG VUE_APP_BACKEND_URL=local
+ENV VUE_APP_BACKEND_URL ${VUE_APP_BACKEND_URL}
 RUN npm run build
 
 # production stage
