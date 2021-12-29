@@ -19,6 +19,10 @@ export default {
 </script>
 
 <style>
+#app {
+  min-height: 100vh;
+}
+
 body {
   margin: 0px;
   padding: 0px;
